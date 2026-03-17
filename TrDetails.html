@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Transaction Details — Rajshri Loto</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #222;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Re-use Header Styles from game */
+        .header-container {
+            display: flex;
+            background-color: #7a0000; /* Maroon */
+            border-bottom: 2px solid #000;
+            width: 100%;
+        }
+
+        .logo-box {
+            background: white;
+            padding: 5px;
+            border-right: 2px solid #000;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo-box img {
+            height: 60px;
+            width: 60px;
+            object-fit: contain;
+        }
+
+        .header-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 10px;
+            gap: 8px;
+        }
+
+        .brand-name, .welcome-msg, #clock {
+            color: #fc9c0c; /* Gold */
+            font-size: 18px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .sys-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-back {
+            background: #fc9c0c;
+            color: #000;
+            padding: 4px 12px;
+            font-weight: bold;
+            border: 1px solid #000;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .content-area {
+            padding: 10px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .filter-panel {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            border: 2px solid #555;
+            margin-bottom: 10px;
+        }
+
+        .filter-panel label {
+            font-size: 14px;
+            color: #fc9c0c;
+            font-weight: bold;
+        }
+
+        .filter-panel input[type="date"] {
+            padding: 6px;
+            border: 1px solid #fc9c0c;
+            background: #ffffcc;
+            font-weight: bold;
+            outline: none;
+        }
+
+        .btn-search {
+            background-color: #fc9c0c;
+            color: black;
+            border: 1px solid #000;
+            padding: 7px 20px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .table-container {
+            background: white;
+            border: 2px solid #000;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-title {
+            background-color: #7a0000;
+            color: #fc9c0c;
+            padding: 8px 15px;
+            font-weight: bold;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #000;
+            position: sticky;
+            top: 0;
+            z-index: 11;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #000;
+            color: #fc9c0c;
+            padding: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid #555;
+            text-transform: uppercase;
+            position: sticky;
+            top: 35px; /* Adjusting for table-title height */
+            z-index: 10;
+        }
+
+        td {
+            padding: 8px;
+            font-size: 13px;
+            color: #000;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover td {
+            background-color: #fffbe6;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .won { background: #18b418; color: #fff; }
+        .lost { background: #e21b1b; color: #fff; }
+        .claimed { background: #1a4db5; color: #fff; }
+        .active { background: #facf0f; color: #000; }
+
+        .footer {
+            background: #000;
+            color: #fc9c0c;
+            text-align: right;
+            padding: 5px 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header-container">
+        <div class="logo-box">
+            <img src="Css/Aassets/image/rajshriloto image.png" alt="Logo" />
+        </div>
+        <div class="header-content">
+            <div class="top-row">
+                <div class="brand-name">RAJSHRI LOTO</div>
+                <div class="welcome-msg" id="headerWelcome">WELCOME ...</div>
+                <div id="clock">--:--:--</div>
+                <div class="sys-btns">
+                    <a href="index.html" class="btn-back">Back</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="content-area">
+        <div class="filter-panel">
+            <label>DRAW DATE:</label>
+            <input type="date" id="historyDate" />
+            <button class="btn-search" id="searchBtn">🔍 SEARCH HISTORY</button>
+        </div>
+
+        <div class="table-container">
+            <div class="table-title">
+                <span>TRANSACTION HISTORY</span>
+                <span id="totalStats"></span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Barcode</th>
+                        <th>Tr. No.</th>
+                        <th>Draw Time</th>
+                        <th>Amount</th>
+                        <th>Winning</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <tr><td colspan="8" style="padding: 40px; font-weight: bold;">Please Wait...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        Rajshri Loto Terminal v1.0
+    </div>
+
+
+    <script type="module">
+        import { getBetHistory } from "./api.js";
+
+        const dateInput = document.getElementById('historyDate');
+        const searchBtn = document.getElementById('searchBtn');
+        const tableBody = document.getElementById('historyTableBody');
+        const statsEl = document.getElementById('totalStats');
+
+        // Initial setup
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+
+        const userData = JSON.parse(localStorage.getItem('rajsri_user') || '{}');
+        const username = userData.username || '';
+
+        function updateHeader() {
+            if (userData.username) {
+                const welcomeEl = document.getElementById('headerWelcome');
+                if (welcomeEl) welcomeEl.textContent = `WELCOME ${userData.username} (${userData.id})`;
+            }
+            setInterval(() => {
+                const clockEl = document.getElementById('clock');
+                if (clockEl) clockEl.textContent = new Date().toLocaleTimeString('en-US', { hour12: true });
+            }, 1000);
+        }
+        updateHeader();
+
+        async function loadHistory(date) {
+            if (!username) {
+                tableBody.innerHTML = "<tr><td colspan='8' style='color:red;'>Session expired. Please login again.</td></tr>";
+                return;
+            }
+
+            tableBody.innerHTML = "<tr><td colspan='8'>🔄 Fetching data...</td></tr>";
+            statsEl.innerText = "";
+
+            try {
+                const response = await getBetHistory(username, date);
+                
+                if (response && response.status && response.tickets && response.tickets.length > 0) {
+                    tableBody.innerHTML = "";
+                    let totalAmt = 0;
+                    let totalWin = 0;
+
+                    response.tickets.forEach((t, index) => {
+                        const amt = parseFloat(t.amount || t.play_amount || 0);
+                        const win = parseFloat(t.win_amt || t.win_amount || 0);
+                        totalAmt += amt;
+                        totalWin += win;
+
+                        const row = document.createElement('tr');
+                        
+                        // Status styling
+                        let statusClass = 'active';
+                        let statusText = t.status || 'Active';
+                        if (win > 0) statusClass = 'won';
+                        if (t.status === 'Claimed' || t.claim_status == 1) {
+                            statusClass = 'claimed';
+                            statusText = 'Claimed';
+                        }
+                        if (t.status === 'Cancelled') statusClass = 'lost';
+
+                        row.innerHTML = `
+                            <td>${index + 1}</td>
+                            <td style="font-family:monospace; font-weight:bold;">${t.barcode}</td>
+                            <td>${t.tr || t.id || '-'}</td>
+                            <td style="font-weight:bold; color:#166534;">${t.draw_time || t.DrawTime || t.draw_times || t.drawtime || '-'}</td>
+                            <td style="font-weight:bold;">${amt.toLocaleString('en-IN')}</td>
+                            <td style="color:${win > 0 ? '#166534' : '#666'}; font-weight:bold;">${win > 0 ? win.toLocaleString('en-IN') : '0'}</td>
+                            <td><span class="badge ${statusClass}">${statusText}</span></td>
+                            <td style="font-size:11px; color:#64748b;">${t.tck_time || t.bet_time || '-'}</td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                    statsEl.innerText = `Total Amount: ₹${totalAmt.toLocaleString('en-IN')} | Total Win: ₹${totalWin.toLocaleString('en-IN')}`;
+                } else {
+                    tableBody.innerHTML = "<tr><td colspan='8'>No records found for " + date + ".</td></tr>";
+                }
+            } catch (error) {
+                console.error("History Page Error:", error);
+                tableBody.innerHTML = "<tr><td colspan='8' style='color:red;'>Failed to load records. Check connection.</td></tr>";
+            }
+        }
+
+        searchBtn.onclick = () => loadHistory(dateInput.value);
+
+        // Auto load for today on open
+        if (username) loadHistory(today);
+    </script>
+</body>
+
+</html>

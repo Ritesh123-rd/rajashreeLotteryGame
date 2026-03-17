@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Rajshri Lottery</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Decorative circles for better glass effect visibility */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        body::before {
+            background: linear-gradient(45deg, #ff9900, #ff4d4d);
+            top: 10%;
+            left: 15%;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+        body::after {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            bottom: 10%;
+            right: 15%;
+            filter: blur(80px);
+            opacity: 0.4;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            width: 380px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+
+        .login-card h2 {
+            margin-bottom: 30px;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            box-sizing: border-box;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #ff9900;
+            box-shadow: 0 0 15px rgba(255, 153, 0, 0.2);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #ff9900, #ffb31a);
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-top: 15px;
+            box-shadow: 0 10px 20px rgba(255, 153, 0, 0.2);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(255, 153, 0, 0.35);
+            background: linear-gradient(45deg, #ffb31a, #ffcc33);
+        }
+
+        .btn-login:active {
+            transform: translateY(-1px);
+        }
+
+        .error-msg {
+            background: rgba(255, 77, 77, 0.15);
+            color: #ff4d4d;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid rgba(255, 77, 77, 0.3);
+            display: none;
+        }
+
+        .success-msg {
+            background: rgba(77, 255, 150, 0.15);
+            color: #4dff96;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid rgba(77, 255, 150, 0.3);
+            display: none;
+        }
+
+        .logo {
+            width: 110px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <img src="Css/Aassets/image/rajshriloto image.png" alt="Logo" class="logo">
+        <h2>Terminal Login</h2>
+        <div id="error" class="error-msg"></div>
+        <div id="success" class="success-msg"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn-login">LOGIN</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { login } from "./api.js";
+
+        const form = document.getElementById('loginForm');
+        const errorEl = document.getElementById('error');
+        const successEl = document.getElementById('success');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+            
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            console.log("Attempting login for:", user);
+
+            try {
+                const response = await login(user, pass);
+                console.log("Full Login Response:", response);
+
+                if (response && (response.status === true || response.success === true)) {
+                    console.log("Login Success! Proceeding to redirect...");
+                    
+                    // The API returns data flat in the response root according to screenshot
+                    const userData = response; 
+                    localStorage.setItem('rajsri_user', JSON.stringify({
+                        username: userData.username || user,
+                        id: userData.user_id || userData.id || "0", // Match user_id from screenshot
+                        role: userData.role || "user"
+                    }));
+                    
+                    successEl.innerHTML = "Login Successful! Redirecting now...";
+                    successEl.style.display = 'block';
+
+                    console.log("Stored User Data:", localStorage.getItem('rajsri_user'));
+                    
+                    setTimeout(() => {
+                        window.location.replace('index.html');
+                    }, 500);
+                } else {
+                    errorEl.textContent = response ? (response.message || "Invalid Username/Password") : "Invalid API Response";
+                    errorEl.style.display = 'block';
+                }
+            } catch (err) {
+                console.error("Login Crash Error:", err);
+                errorEl.textContent = "Error: " + err.message;
+                errorEl.style.display = 'block';
+            }
+        });
+
+        // Check if already logged in
+        if (localStorage.getItem('rajsri_user')) {
+            window.location.replace('index.html');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reprint Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .top-header {
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: normal;
+            font-size: 18px;
+        }
+
+        .content-area {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .filter-panel {
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .filter-panel label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .filter-panel input[type="date"] {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            width: 140px;
+            color: #333;
+            outline: none;
+        }
+
+        .btn-red {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-red:hover {
+            background-color: #dc2626;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .table-title {
+            background-color: #1e293b;
+            color: white;
+            padding: 14px 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 14px;
+            font-size: 13px;
+            color: #333;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+    </style>
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #printReceipt,
+            #printReceipt * {
+                visibility: visible;
+            }
+
+            #printReceipt {
+                display: block !important;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .top-header,
+            .content-area,
+            .footer {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-header">
+        REPORT
+        <a href="index.html" class="close-btn">✕</a>
+    </div>
+    <div class="content-area">
+        <div class="filter-panel">
+            <label>Select Date :-</label>
+            <input type="date" id="reportDate" value="2026-02-26" />
+            <button class="btn-red" id="searchBtn">Search</button>
+        </div>
+
+        <div class="table-container">
+            <div class="table-title">Reprint History</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Barcode</th>
+                        <th>Play Amount</th>
+                        <th>Win Amount</th>
+                        <th>Draw Time</th>
+                        <th>Bet Date</th>
+                        <th>Bet Time</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="footer">
+        © 2026 3D/4D Lottery | All rights reserved
+    </div>
+
+    <!-- Hidden Print Template (Same as index.html) -->
+    <div id="printReceipt" style="display:none;">
+      <div style="text-align:center; font-family:'Courier New', Courier, monospace; width:72mm; margin:0 auto; padding:5px 12px; background:white; color:black; border:none;">
+        <h2 style="margin:2px 0; font-size:17px; font-weight: 900;">Rajshri Lottery 4D Game</h2>
+        <p style="font-size:11px; margin:0; font-weight: bold;">(Ticket valid for 10 days)</p>
+        <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+        
+        <div style="text-align:left; font-size:15px; line-height:1.5; font-weight:900;">
+          <div>Game Date : <span id="pGameDate"></span></div>
+          <div>Draw Time : <span id="pDrawTime"></span></div>
+          <div>Ticket Time : <span id="pTicketTime"></span></div>
+          <div>Retailer ID : <span id="pRetailerId"></span></div>
+          <div>Total Point : <span id="pTotalPoint"></span></div>
+          <div>Total Qty : <span id="pTotalQty"></span></div>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; border:2px solid #000; font-weight:900;">
+          <thead>
+            <tr>
+              <th style="border:2px solid #000; padding:4px;">Num</th><th style="border:2px solid #000; padding:4px;">Price</th>
+              <th style="border:2px solid #000; padding:4px;">Num</th><th style="border:2px solid #000; padding:4px;">Price</th>
+              <th style="border:2px solid #000; padding:4px;">Num</th><th style="border:2px solid #000; padding:4px;">Price</th>
+            </tr>
+          </thead>
+          <tbody id="pBetTable"></tbody>
+        </table>
+
+        <div style="margin-top:12px; text-align:center;">
+          <svg id="pBarcodeCanvas"></svg>
+        </div>
+        <div style="border-top:1px dashed #000; margin:12px 0;"></div>
+      </div>
+    </div>
+
+    <script type="module">
+        import { getBetHistory, getPrintDetails } from "./api.js";
+
+        const dateInput = document.getElementById('reportDate');
+        const searchBtn = document.getElementById('searchBtn');
+        const tableBody = document.getElementById('reportTableBody');
+
+        // Set default date to today
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+
+        // Load current user
+        const userData = JSON.parse(localStorage.getItem('rajsri_user') || '{}');
+        const username = userData.username || '';
+
+        window.handleReprint = async function(barcode) {
+            console.log("Reprinting barcode:", barcode);
+            try {
+                const response = await getPrintDetails(barcode, username);
+                if (response && response.status && response.tickets && response.tickets.length > 0) {
+                    const ticket = response.tickets[0];
+                    
+                    // Calculate multiplier from total amount and raw qty if available
+                    let totalAmt = parseFloat(ticket.amount || 0);
+                    let totalQtyInput = parseFloat(ticket.qty || 1);
+                    let multiplier = totalQtyInput > 0 ? (totalAmt / totalQtyInput) : 2;
+
+                    // Populate Print Template
+                    document.getElementById('pGameDate').innerText = (ticket.record_date || ticket.Date || "").replace(/:/g, "-");
+                    document.getElementById('pDrawTime').innerText = ticket.draw_time || ticket.DrawTime || ticket.draw_times || "";
+                    document.getElementById('pTicketTime').innerText = ticket.tck_time || ticket.bet_time || "";
+                    document.getElementById('pRetailerId').innerText = ticket.username || username;
+                    document.getElementById('pTotalPoint').innerText = totalAmt;
+                    document.getElementById('pTotalQty').innerText = Math.round(totalQtyInput * multiplier);
+
+                    const pTableBody = document.getElementById('pBetTable');
+                    pTableBody.innerHTML = "";
+                    
+                    const betLines = ticket.bet_lines || [];
+
+                    for (let i = 0; i < betLines.length; i += 3) {
+                        const tr = document.createElement('tr');
+                        for (let j = 0; j < 3; j++) {
+                            const line = betLines[i + j];
+                            if (line) {
+                                let displayQty = Math.round(parseFloat(line.qty) * multiplier);
+                                tr.innerHTML += `<td style="border:2px solid #000; padding:4px; text-align:center; font-weight:900;">${String(line.num).padStart(4, '0')}</td><td style="border:2px solid #000; padding:4px; text-align:center; font-weight:900;">${displayQty}</td>`;
+                            } else {
+                                tr.innerHTML += `<td style="border:2px solid #000; padding:4px;"></td><td style="border:2px solid #000; padding:4px;"></td>`;
+                            }
+                        }
+                        pTableBody.appendChild(tr);
+                    }
+
+                    // Generate Barcode
+                    JsBarcode("#pBarcodeCanvas", ticket.barcode, {
+                        format: "CODE128",
+                        lineColor: "#000",
+                        width: 2,
+                        height: 50,
+                        displayValue: true,
+                        fontSize: 14,
+                        fontOptions: "bold",
+                        margin: 0
+                    });
+
+                    // Trigger Print
+                    setTimeout(() => {
+                        window.print();
+                    }, 500);
+                } else {
+                    alert("Error fetching ticket details for reprint.");
+                }
+            } catch (error) {
+                console.error("Reprint error:", error);
+                alert("Critical error during reprint.");
+            }
+        };
+
+       
+
+        async function loadReport(date) {
+            tableBody.innerHTML = "<tr><td colspan='8'>Loading...</td></tr>";
+            
+            try {
+                const response = await getBetHistory(username, date);
+                
+                if (response && response.status && response.tickets && response.tickets.length > 0) {
+                    tableBody.innerHTML = "";
+                    const responseDate = response.record_date || ""; // Fallback date from root
+
+                    response.tickets.forEach(ticket => {
+                        console.log("Ticket Data:", ticket);
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="font-weight:bold;">${ticket.barcode || 'N/A'}</td>
+                            <td style="font-weight:bold;">${ticket.amount || ticket.play_amount || ticket.total_load_c_amount || '0'}</td>
+                            <td style="font-weight:bold;">${ticket.win_amt || '0'}</td>
+                            <td style="font-weight:bold;">${ticket.draw_time || ticket.DrawTime || ticket.draw_times || ticket.drawtime || 'N/A'}</td>
+                            <td style="font-weight:bold;">${ticket.record_date || ticket.bet_date || ticket.Date || ticket.date || responseDate || 'N/A'}</td>
+                            <td style="font-weight:bold;">${ticket.tck_time || ticket.bet_time || ticket.Time || ticket.time || 'N/A'}</td>
+                            <td style="color: ${ticket.status === 'Won' ? 'green' : 'black'}; font-weight:bold;">${ticket.status || 'Active'}</td>
+                            <td style="display: flex; gap: 5px; justify-content: center;">
+                                <button class="btn-red" style="padding: 4px 6px; font-size: 11px;" onclick="handleReprint('${ticket.barcode}')">Reprint</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(tr);
+                    });
+                } else {
+                    tableBody.innerHTML = "<tr><td colspan='8'>No records found for this date.</td></tr>";
+                }
+            } catch (error) {
+                console.error("Report Error:", error);
+                tableBody.innerHTML = "<tr><td colspan='8'>Error loading records.</td></tr>";
+            }
+        }
+
+        searchBtn.onclick = () => loadReport(dateInput.value);
+
+        // Initial load
+        if (username) {
+            loadReport(today);
+        } else {
+            tableBody.innerHTML = "<tr><td colspan='8'>Please login to view report.</td></tr>";
+        }
+    </script>
+</body>
+
+</html>

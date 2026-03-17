@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-header {
+            background-color: #d32f2f;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-weight: normal;
+            font-size: 18px;
+        }
+
+        .filter-panel {
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .filter-panel label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .filter-panel input[type="date"] {
+            padding: 6px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            width: 130px;
+            color: #333;
+            outline: none;
+        }
+
+        .btn-red {
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-red:hover {
+            background-color: #dc2626;
+        }
+
+        .content-area {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .result-block {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        .time-header {
+            background-color: #d32f2f;
+            color: white;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            width: 80px;
+        }
+
+        .col-header {
+            background-color: #94a3b8;
+            color: white;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .row-header {
+            background-color: #f1f5f9;
+            color: #333;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        td:last-child {
+            border-right: none;
+        }
+
+        .number-box {
+            background-color: #0b5f25;
+            color: white;
+            padding: 6px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            width: 100%;
+            display: inline-block;
+            min-width: 50px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-header">
+        <span id="headerDate">RESULT (2026-02-26)</span>
+        <a href="index.html" class="close-btn">✕</a>
+    </div>
+
+    <div class="filter-panel">
+        <label>Select Date</label>
+        <input type="date" id="resultDate" value="2026-02-26" />
+        <button class="btn-red" id="submitBtn">Submit</button>
+    </div>
+
+    <div class="content-area" id="resultContainer">
+        <!-- Results will be injected here -->
+    </div>
+
+    <div class="footer">
+        © 2026 3D/4D Lottery | All rights reserved
+    </div>
+
+
+
+
+
+
+
+
+    <script type="module">
+        import { getResultDateWise } from "./api.js";
+
+        const dateInput = document.getElementById('resultDate');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const headerDate = document.getElementById('headerDate');
+        
+        // Aaj ki date default set karein
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.value = today;
+        fetchAndDisplayResults(today);
+
+        // Submit button click par update karein
+        submitBtn.addEventListener('click', () => {
+            fetchAndDisplayResults(dateInput.value);
+        });
+
+        async function fetchAndDisplayResults(date) {
+            headerDate.innerText = `RESULT (${date})`;
+            resultContainer.innerHTML = "<h3 style='text-align:center; padding:20px;'>Loading...</h3>";
+            
+            try {
+                const response = await getResultDateWise(date);
+                
+                if (response && response.status && response.results && response.results.length > 0) {
+                    resultContainer.innerHTML = ""; // Clear loader
+                    
+                    response.results.forEach(item => {
+                        const block = createResultBlock(item.time, item.result);
+                        resultContainer.appendChild(block);
+                    });
+                } else {
+                    resultContainer.innerHTML = "<h3 style='text-align:center; padding:20px; color:red;'>No results found for this date.</h3>";
+                }
+            } catch (error) {
+                console.error("Result Sync Error:", error);
+                resultContainer.innerHTML = "<h3 style='text-align:center; padding:20px; color:red;'>Error fetching results.</h3>";
+            }
+        }
+
+        function createResultBlock(time, resultStr) {
+            const numbers = resultStr.split(',').map(n => n.trim());
+            const blockDiv = document.createElement('div');
+            blockDiv.className = 'result-block';
+            
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="time-header">${time}</th>
+                            ${Array.from({length: 10}, (_, i) => `<th class="col-header">${String(i).padStart(2, '0')}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Generate 10 rows (00, 01, ..., 09)
+            for (let r = 0; r < 10; r++) {
+                html += `<tr><td class="row-header">${String(r).padStart(2, '0')}</td>`;
+                for (let c = 0; c < 10; c++) {
+                    const index = r * 10 + c;
+                    const val = numbers[index] || "----";
+                    html += `<td><div class="number-box">${val}</div></td>`;
+                }
+                html += `</tr>`;
+            }
+            
+            html += `</tbody></table>`;
+            blockDiv.innerHTML = html;
+            return blockDiv;
+        }
+    </script>
+
+</body>
+
+</html>

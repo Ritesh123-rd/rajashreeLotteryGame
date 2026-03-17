@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cancel — Rajshri Loto Terminal</title>
+    <link rel="stylesheet" href="page-common.css" />
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="header-container">
+        <div class="logo-box">
+            <img src="Css/Aassets/image/rajshriloto image.png" alt="Rajshri Win Lot" />
+        </div>
+        <div class="header-content">
+            <div class="top-row">
+                <div class="brand-name">RAJSHRI LOTO</div>
+                <div class="welcome-msg">WELCOME BADGMYTK (VL39120137)</div>
+                <div id="clock">Current Time :--:--:--</div>
+                <div class="sys-btns">
+                    <button class="btn-back" onclick="history.back()">Back</button>
+                    <button class="btn-logout" id="logoutBtn">Logout</button>
+                </div>
+            </div>
+            <script> 
+              // Quick redirect if not logged in
+              if (!localStorage.getItem('rajsri_user')) {
+                  window.location.href = 'login.html';
+              }
+            </script>
+            <div class="bottom-row">
+                <div class="time-slot-box">08:30 PM</div>
+                <div class="nav-results-area">
+                    <div class="nav-bar">
+                        <button onclick="location.href='accounts.html'">Accounts</button>
+                        <button onclick="location.href='passwords.html'">Passwords</button>
+                        <button onclick="location.href='reprint.html'">Reprint</button>
+                        <button class="active" onclick="location.href='cancle.html'">Cancle</button>
+                        <button onclick="location.href='result.html'">Result</button>
+                        <button onclick="location.href='claim.html'">Claim</button>
+                    </div>
+                    <div class="winning-numbers">
+                        <div class="num-box yellow">0059</div>
+                        <div class="num-box red">0128</div>
+                        <div class="num-box d-green">0282</div>
+                        <div class="num-box orange">0379</div>
+                        <div class="num-box teal">0454</div>
+                        <div class="num-box white">0531</div>
+                        <div class="num-box pink">0651</div>
+                        <div class="num-box gold">0771</div>
+                        <div class="num-box l-green">0844</div>
+                        <div class="num-box grey">0921</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="status-bar">
+        <span>Cancel Ticket</span>
+        <span class="msg-ok" id="statusMsg">Enter Transaction No. or scan barcode to cancel</span>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="page-title-bar">
+            ❌ Cancel Ticket <span>— Cancel lottery tickets before draw</span>
+        </div>
+
+        <!-- SEARCH FORM -->
+        <div
+            style="padding:14px;background:#f8f8f8;border-bottom:2px solid #000;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+            <div>
+                <label style="display:block;font-size:12px;font-weight:bold;color:#000;margin-bottom:3px;">Transaction
+                    No.</label>
+                <input type="text" class="pg-input" id="txnNo" placeholder="Enter Tr. No." style="width:180px;" oninput="searchTickets()" />
+            </div>
+            <div>
+                <label style="display:block;font-size:12px;font-weight:bold;color:#000;margin-bottom:3px;">Barcode /
+                    Scan</label>
+                <input type="text" class="pg-input" id="barcodeNo" placeholder="Scan barcode here"
+                    style="width:230px;" oninput="searchTickets()" />
+            </div>
+            <button class="pg-btn pg-btn-gold" onclick="loadCurrentDraw()">🔄 Refresh</button>
+            <button class="pg-btn pg-btn-grey" onclick="clearSearch()">↩ Clear</button>
+        </div>
+
+        <!-- TICKET TABLE -->
+        <div style="overflow-x:auto;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll" onclick="toggleAll(this)" /></th>
+                        <th>Tr. No.</th>
+                        <th>Barcode</th>
+                        <th>Draw Date</th>
+                        <th>Draw Time</th>
+                        <th>Bet Date</th>
+                        <th>Numbers</th>
+                        <th>Amount (Rs.)</th>
+                        <th>Agent</th>
+                        <th>Print Time</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="cancelBody"></tbody>
+            </table>
+        </div>
+
+        <!-- SUMMARY ROW -->
+        <div
+            style="display:flex;gap:30px;padding:8px 14px;background:#000;color:#fc9c0c;font-weight:bold;font-size:13px;border-top:2px solid #fc9c0c;">
+            <span>Selected: <span id="selCount" style="color:#fff;">0</span></span>
+            <span>Total Amount: Rs. <span id="selAmount" style="color:#ff3333;">0</span></span>
+        </div>
+
+        <!-- CANCEL REASON & CONFIRM -->
+        <div
+            style="padding:12px;background:#fff2f2;border-top:2px solid #cc0000;display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+            <div>
+                <label style="display:block;font-size:12px;font-weight:bold;color:#cc0000;margin-bottom:3px;">Cancel
+                    Reason *</label>
+                <select class="pg-input" id="cancelReason" style="width:220px;">
+                    <option value="">-- Select Reason --</option>
+                    <option value="mistake">Customer Mistake</option>
+                    <option value="duplicate">Duplicate Ticket</option>
+                    <option value="request">Customer Request</option>
+                    <option value="error">System Error</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label
+                    style="display:block;font-size:12px;font-weight:bold;color:#cc0000;margin-bottom:3px;">Remarks</label>
+                <input type="text" class="pg-input" id="cancelRemarks" placeholder="Optional remarks..."
+                    style="width:260px;" />
+            </div>
+            <button class="pg-btn pg-btn-red" onclick="cancelSelected()" style="font-size:14px;padding:8px 24px;">❌
+                Cancel Selected Tickets</button>
+        </div>
+    </div>
+
+    <!-- CONFIRM CANCEL MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box" style="min-width:360px;">
+            <div class="modal-header" style="background:#cc0000;">
+                ⚠ Confirm Cancellation
+                <button class="modal-close-btn" onclick="closeConfirm()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="font-size:14px;color:#000;margin-bottom:12px;" id="confirmMsg">Are you sure?</div>
+                <div style="padding:10px;background:#fffbe6;border:1px solid #cc0000;border-radius:4px;font-size:13px;"
+                    id="confirmDetails"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="pg-btn pg-btn-red" onclick="confirmCancel()">✔ Yes, Cancel</button>
+                <button class="pg-btn pg-btn-grey" onclick="closeConfirm()">✕ No, Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-action-bar">
+        <button class="pg-btn pg-btn-gold" onclick="location.href='index.html'">🏠 Home</button>
+        <span style="flex:1;text-align:right;font-size:12px;color:#555;">Rajshri Loto Terminal v1.0</span>
+    </div>
+
+    <script type="module" src="script.js"></script>
+    <script type="module">
+        import { cancelTicket, getCurrentDrawBetHistory } from "./api.js";
+
+        // State
+        var tickets = [];
+        var filtered = [];
+        var currentUser = JSON.parse(localStorage.getItem('rajsri_user'));
+        var currentUsername = currentUser ? currentUser.username : "guest";
+        var localCancelledIds = JSON.parse(sessionStorage.getItem('local_cancelled_ids') || "[]");
+
+        function el(id) { return document.getElementById(id); }
+
+        async function loadTickets() {
+            el('cancelBody').innerHTML = '<tr><td colspan="11" style="text-align:center;">Loading Tickets...</td></tr>';
+            try {
+                console.log("Fetching Current Draw History...");
+                const response = await getCurrentDrawBetHistory(currentUsername);
+
+                if (response && response.status === true) {
+                    let allFetched = response.tickets || [];
+                    const responseDate = response.record_date || ""; // Fallback date from root
+
+                    // Aggressive filter: remove anything that looks like it's cancelled, plus client-side cache
+                    tickets = allFetched.filter(t => {
+                        const s = String(t.status || "").toLowerCase();
+                        const isLocallyCancelled = localCancelledIds.includes(String(t.id));
+                        return (!isLocallyCancelled && s !== 'cancelled' && s !== 'cancel' && s !== '3' && t.is_cancelled != 1);
+                    });
+                    
+                    // Add root date to tickets if missing
+                    tickets.forEach(t => {
+                        if (!t.record_date && !t.bet_date && !t.date && !t.Date) t.record_date = responseDate;
+                    });
+
+                    filtered = tickets.slice();
+                    renderTable(filtered);
+                } else {
+                    el('cancelBody').innerHTML = `<tr><td colspan="11" style="text-align:center;color:red;">${response.message || 'No active tickets found'}</td></tr>`;
+                }
+            } catch (error) {
+                console.error("Load tickets error:", error);
+                el('cancelBody').innerHTML = '<tr><td colspan="11" style="text-align:center;color:red;">Error connecting to server</td></tr>';
+            }
+        }
+
+        function renderTable(data) {
+            var tbody = el('cancelBody');
+            tbody.innerHTML = '';
+            
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No tickets found.</td></tr>';
+                return;
+            }
+
+            data.forEach(function (t, i) {
+                // Determine if can cancel: Status should be Active and time should be before draw (simplified for now)
+                var canCancel = (t.status === 'Active' || t.status === 'success' || !t.status);
+                var statusText = t.status || 'Active';
+                var sc = (statusText === 'Active' || statusText === 'success') ? 'td-green' : (statusText === 'Won' ? 'td-gold' : 'td-red');
+                
+                const tAmt = t.amount || t.total_load_c_amount || 0;
+                const tQty = t.qty || t.total_load_c_qty || 0;
+
+                tbody.innerHTML += `<tr>
+                    <td><input type="checkbox" class="row-check" data-idx="${i}" data-id="${t.id}" data-amount="${tAmt}" ${canCancel ? '' : 'disabled'} onchange="updateSummary()" /></td>
+                    <td style="font-weight:bold;">${t.tr || t.id}</td>
+                    <td style="font-family:monospace;font-size:11px;">${t.barcode}</td>
+                    <td>${t.record_date || t.bet_date || t.Date || t.date || 'N/A'}</td>
+                    <td>${t.draw_times || t.draw_time || t.DrawTime || t.drawtime || 'N/A'}</td>
+                    <td style="font-size:11px;">${t.bet_time || t.created_at || t.printTime || 'N/A'}</td>
+                    <td style="font-weight:bold;color:#7a0000; font-size:10px;">${t.all_datas12 || 'N/A'}</td>
+                    <td class="td-gold" style="text-align:right;">${tAmt}</td>
+                    <td>${t.username || currentUsername}</td>
+                    <td style="font-size:11px;">${t.bet_time || t.created_at || 'N/A'}</td>
+                    <td class="${sc}">${statusText}</td>
+                    <td>${canCancel ? `<button class="pg-btn pg-btn-red" style="padding:3px 10px;font-size:11px;" id="btn-cancel-${i}">Cancel</button>` : '—'}</td>
+                </tr>`;
+            });
+
+            // Bind click events after innerHTML update
+            data.forEach((t, i) => {
+                let btn = el(`btn-cancel-${i}`);
+                if (btn) btn.onclick = () => cancelOne(i);
+            });
+
+            el('statusMsg').textContent = 'Found: ' + data.length + ' tickets';
+            updateSummary();
+        }
+
+        window.updateSummary = function() {
+            var checks = document.querySelectorAll('.row-check:checked');
+            var total = 0;
+            checks.forEach(function (c) { total += parseInt(c.dataset.amount) || 0; });
+            el('selCount').textContent = checks.length;
+            el('selAmount').textContent = total;
+        }
+
+        window.toggleAll = function(masterCb) {
+            document.querySelectorAll('.row-check:not(:disabled)').forEach(function (cb) { cb.checked = masterCb.checked; });
+            updateSummary();
+        }
+
+        window.searchTickets = function() {
+            var tr = el('txnNo').value.trim();
+            var bc = el('barcodeNo').value.trim();
+
+            filtered = tickets.filter(function (t) {
+                return (!tr || (t.tr == tr || t.id == tr)) && 
+                       (!bc || t.barcode.includes(bc));
+            });
+            renderTable(filtered);
+        }
+
+        window.loadCurrentDraw = function() {
+            el('txnNo').value = '';
+            el('barcodeNo').value = '';
+            loadTickets();
+        }
+
+        window.clearSearch = function() {
+            el('txnNo').value = '';
+            el('barcodeNo').value = '';
+            loadTickets();
+        }
+
+        function cancelOne(i) {
+            document.querySelectorAll('.row-check').forEach(function (cb) { cb.checked = false; });
+            let checks = document.querySelectorAll('.row-check');
+            if (checks[i]) checks[i].checked = true;
+            updateSummary();
+            showConfirm();
+        }
+
+        window.cancelSelected = function() {
+            var checks = document.querySelectorAll('.row-check:checked');
+            if (!checks.length) { alert('No tickets selected!'); return; }
+            showConfirm();
+        }
+
+        function showConfirm() {
+            var reason = el('cancelReason').value;
+            if (!reason) { alert('Please select a cancel reason!'); return; }
+            var checks = document.querySelectorAll('.row-check:checked');
+            var trs = []; var total = 0;
+            checks.forEach(function (c) { 
+                let t = filtered[parseInt(c.dataset.idx)];
+                trs.push(t.tr || t.id); 
+                total += parseInt(t.total_load_c_amount) || 0; 
+            });
+            el('confirmMsg').textContent = 'Cancel ' + trs.length + ' ticket(s)?';
+            el('confirmDetails').innerHTML =
+                '<b>Tr. Numbers:</b> ' + trs.join(', ') + '<br>' +
+                '<b>Total Refund:</b> Rs. ' + total + '<br>' +
+                '<b>Reason:</b> ' + el('cancelReason').selectedOptions[0].text + '<br>' +
+                '<b>Remarks:</b> ' + (el('cancelRemarks').value || '—');
+            el('confirmModal').classList.add('open');
+        }
+
+        window.closeConfirm = function() { el('confirmModal').classList.remove('open'); }
+
+        window.confirmCancel = async function() {
+            var checks = document.querySelectorAll('.row-check:checked');
+            let successCount = 0;
+
+            for (let c of checks) {
+                let ticketId = String(c.dataset.id);
+                try {
+                    const res = await cancelTicket(ticketId);
+                    if (res && res.status === true) {
+                        successCount++;
+                        localCancelledIds.push(ticketId);
+                    } else {
+                        console.error(`Failed to cancel ID ${ticketId}:`, res.message);
+                    }
+                } catch (e) {
+                    console.error(`Error cancelling ID ${ticketId}:`, e);
+                }
+            }
+            
+            // Save client-side cancelled state so they stop showing up
+            sessionStorage.setItem('local_cancelled_ids', JSON.stringify(localCancelledIds));
+
+            closeConfirm();
+            if (successCount > 0) {
+                alert(`Successfully cancelled ${successCount} ticket(s).`);
+                loadTickets(); // Refresh (cancelled tickets will be filtered out)
+            } else {
+                alert("Cancellation failed. Please check if ticket is already cancelled or draw is over.");
+            }
+            
+            el('statusMsg').textContent = 'Cancellation processed!';
+            el('cancelReason').value = '';
+            el('cancelRemarks').value = '';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTickets(); // Load current draw by default
+            
+            // Add custom styles for the table cells from data-table
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .td-green { color: green; font-weight: bold; }
+                .td-gold { color: #b8860b; font-weight: bold; }
+                .td-red { color: red; font-weight: bold; }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+
+</html>

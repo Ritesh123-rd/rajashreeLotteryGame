@@ -1,0 +1,482 @@
+/* =============================================
+   COMMON PAGE STYLES — Rajshri Loto Terminal
+   Used by all sub-pages (Accounts, Passwords, etc.)
+   ============================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+:root {
+  --maroon: #7a0000;
+  --gold: #fc9c0c;
+  --purple: #951ddf;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #222;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* =============================================
+   HEADER (shared across all pages)
+   ============================================= */
+.header-container {
+  display: flex;
+  background-color: var(--maroon);
+  border-bottom: 2px solid #000;
+  width: 100%;
+}
+
+.logo-box {
+  background: white;
+  padding: 5px;
+  border-right: 2px solid #000;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.logo-box img {
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+}
+
+.header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  gap: 8px;
+}
+
+.brand-name {
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.welcome-msg {
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+#clock {
+  color: var(--gold);
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.sys-btns {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.sys-btns button {
+  padding: 4px 12px;
+  font-weight: bold;
+  border: 1px solid #000;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-back {
+  background: var(--gold);
+  color: #000;
+}
+
+.btn-logout {
+  background: red;
+  color: white;
+  border-color: #fff;
+}
+
+.bottom-row {
+  display: flex;
+}
+
+.time-slot-box {
+  background: var(--purple);
+  width: 182px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: bold;
+  border-right: 2px solid #000;
+  padding: 8px 0;
+  color: white;
+}
+
+.nav-results-area {
+  flex: 1;
+  background: var(--gold);
+}
+
+.nav-bar {
+  display: flex;
+  gap: 18px;
+  padding: 7px 8px;
+}
+
+.nav-bar button {
+  background-color: yellow;
+  color: black;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+  width: 110px;
+  transition: background 0.15s;
+}
+
+.nav-bar button:hover {
+  background-color: #ffe500;
+}
+
+.nav-bar button.active {
+  background-color: #ff6600;
+  color: white;
+}
+
+.winning-numbers {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  background: #000;
+  gap: 1px;
+}
+
+.num-box {
+  text-align: center;
+  padding: 5px 0;
+  font-size: 25px;
+  font-weight: bold;
+  color: black;
+}
+
+.yellow  { background: #e5ff00; }
+.red     { background: #ff3333; }
+.d-green { background: #339900; }
+.orange  { background: #ff9966; }
+.teal    { background: #66ff99; }
+.white   { background: #fff; }
+.pink    { background: #ffc0cb; }
+.gold    { background: #ffd700; }
+.l-green { background: #90ee90; }
+.grey    { background: #e0e0e0; }
+
+/* =============================================
+   PAGE CONTENT AREA
+   ============================================= */
+.page-wrapper {
+  background: #fff;
+  margin: 8px;
+  border: 2px solid #000;
+  border-radius: 4px;
+}
+
+/* =============================================
+   PAGE TITLE BAR
+   ============================================= */
+.page-title-bar {
+  background: var(--maroon);
+  color: var(--gold);
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #000;
+}
+
+.page-title-bar span {
+  font-size: 13px;
+  color: #fff;
+  font-weight: normal;
+}
+
+/* =============================================
+   FORM TABLE (shared input table style)
+   ============================================= */
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.form-table th {
+  background: #000;
+  color: #fc9c0c;
+  padding: 7px 12px;
+  font-size: 13px;
+  text-align: left;
+  border: 1px solid #555;
+  white-space: nowrap;
+}
+
+.form-table td {
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid #ccc;
+  color: #000;
+  background: #fff;
+}
+
+.form-table tr:nth-child(even) td {
+  background: #f5f5f5;
+}
+
+.form-table tr:hover td {
+  background: #fffbe6;
+}
+
+/* =============================================
+   INPUT FIELDS
+   ============================================= */
+.pg-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #999;
+  font-size: 13px;
+  font-weight: bold;
+  color: #000;
+  background: #ffffcc;
+}
+
+.pg-input:focus {
+  outline: 2px solid var(--gold);
+  background: #fff;
+}
+
+/* =============================================
+   ACTION BUTTONS (bottom bar style)
+   ============================================= */
+.page-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: #f0f0f0;
+  border-top: 2px solid #000;
+}
+
+.pg-btn {
+  padding: 6px 20px;
+  font-weight: bold;
+  border: 1px solid #000;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 3px;
+  min-width: 90px;
+  text-align: center;
+}
+
+.pg-btn-green  { background: #18b418; color: #fff; }
+.pg-btn-red    { background: #e21b1b; color: #fff; }
+.pg-btn-gold   { background: #facf0f; color: #000; }
+.pg-btn-blue   { background: #1a4db5; color: #fff; }
+.pg-btn-orange { background: #ff7700; color: #fff; }
+.pg-btn-grey   { background: #888;   color: #fff; }
+
+.pg-btn:hover { opacity: 0.85; }
+
+/* =============================================
+   STATUS / MESSAGE BAR
+   ============================================= */
+.status-bar {
+  display: flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: #000;
+  color: orange;
+  font-size: 13px;
+  font-weight: bold;
+  gap: 10px;
+}
+
+.status-bar .msg-ok  { color: #33ff66; }
+.status-bar .msg-err { color: #ff3333; }
+
+/* =============================================
+   ADVANCED DRAW MODAL
+   ============================================= */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-box {
+  background: #fff;
+  border: 3px solid #000;
+  border-radius: 6px;
+  min-width: 480px;
+  max-width: 95vw;
+  box-shadow: 0 8px 32px rgba(0,0,0,.6);
+  overflow: hidden;
+}
+
+.modal-header {
+  background: var(--maroon);
+  color: var(--gold);
+  padding: 10px 16px;
+  font-size: 17px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-close-btn {
+  background: #ff3333;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 2px 10px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+.modal-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.modal-row label {
+  font-size: 13px;
+  font-weight: bold;
+  color: #000;
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.modal-row input, .modal-row select {
+  flex: 1;
+  padding: 5px 8px;
+  border: 1px solid #999;
+  font-size: 13px;
+  font-weight: bold;
+  color: #000;
+  background: #ffffcc;
+}
+
+.modal-row input:focus, .modal-row select:focus {
+  outline: 2px solid var(--gold);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f0f0f0;
+  border-top: 1px solid #ccc;
+  justify-content: flex-end;
+}
+
+.modal-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.modal-info-card {
+  background: #000;
+  border: 1px solid #555;
+  padding: 6px 10px;
+}
+
+.modal-info-card .lbl {
+  font-size: 11px;
+  color: orange;
+  font-weight: bold;
+}
+
+.modal-info-card .val {
+  font-size: 14px;
+  font-weight: bold;
+  background: #ffffcc;
+  color: #000;
+  padding: 2px 6px;
+  margin-top: 2px;
+}
+
+.section-divider {
+  background: #000;
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 10px;
+  margin: 10px -16px;
+  letter-spacing: 0.5px;
+}
+
+/* =============================================
+   DATA TABLE (result, claim, reprint etc.)
+   ============================================= */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-table thead th {
+  background: #000;
+  color: #fc9c0c;
+  padding: 7px 10px;
+  text-align: center;
+  border: 1px solid #555;
+  font-size: 12px;
+}
+
+.data-table tbody td {
+  padding: 5px 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  color: #000;
+}
+
+.data-table tbody tr:nth-child(even) td { background: #f5f5f5; }
+.data-table tbody tr:hover td { background: #fffbe6; }
+
+/* Amount / highlight */
+.td-green  { background: #ccffcc !important; color: #006600 !important; font-weight: bold; }
+.td-red    { background: #ffcccc !important; color: #990000 !important; font-weight: bold; }
+.td-gold   { background: #fffacd !important; color: #885500 !important; font-weight: bold; }
+.td-orange { background: #ffe0b2 !important; color: #7a3900 !important; font-weight: bold; }

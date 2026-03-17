@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Rajshri Loto Terminal</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="page-common.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printReceipt, #printReceipt * {
+        visibility: visible;
+      }
+      #printReceipt {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .scale-viewport, .modal-overlay, #scale-wrapper {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="scale-viewport">
+    <!-- HEADER -->
+    <header class="header-container">
+      <div class="logo-box">
+        <img src="Css/Aassets/image/rajshriloto image.png" alt="Rajshri Win Lot" />
+      </div>
+      <div class="header-content">
+        <div class="top-row">
+          <div class="brand-name">RAJSHRI LOTO</div>
+          <div class="welcome-msg">WELCOME BADGMYTK (VL39120137)</div>
+          <div id="clock">Current Time :20:36:59</div>
+          <div class="sys-btns">
+            <button class="btn-back">Back</button>
+            <button class="btn-logout" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+        <script> 
+          // Quick redirect if not logged in
+          if (!localStorage.getItem('rajsri_user')) {
+              window.location.href = 'login.html';
+          }
+        </script>
+        <div class="bottom-row">
+          <div class="time-slot-box">08:30 PM</div>
+          <div class="nav-results-area">
+            <div class="nav-bar">
+              <button onclick="location.href='accounts.html'">Accounts</button>
+              <button onclick="location.href='passwords.html'">Passwords</button>
+              <button onclick="location.href='TrDetails.html'">TrDetails</button>
+              <button onclick="location.href='reprint.html'">Reprint</button>
+              <button onclick="location.href='cancle.html'">Cancle</button>
+              <button onclick="location.href='result.html'">Result</button>
+              <button onclick="location.href='claim.html'">Claim</button>
+            </div>
+            <div class="winning-numbers">
+              <div class="num-box yellow">0000</div>
+              <div class="num-box red">0000</div>
+              <div class="num-box d-green">0000</div>
+              <div class="num-box orange">0000</div>
+              <div class="num-box teal">0000</div>
+              <div class="num-box white">0000</div>
+              <div class="num-box pink">0000</div>
+              <div class="num-box gold">0000</div>
+              <div class="num-box l-green">0000</div>
+              <div class="num-box grey">0000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="lbl">Time To Draw</span><span id="remaningTime" class="val">8:01</span>
+      </div>
+      <div class="stat-item">
+        <span class="lbl">Dr. Time</span><span id="drawTime" class="val">08:45 pm</span>
+      </div>
+      <div class="stat-item">
+        <span class="lbl">Dr.Date</span><span id="drawDateDisplay" class="val">2024:03:10</span>
+      </div>
+      <div class="stat-item">
+        <span class="lbl">Balance Credit</span><span id="balance" class="val">25184</span>
+      </div>
+      <div class="stat-item">
+        <span class="lbl">Last Tr. No.</span><span class="val">1600</span>
+      </div>
+      <div class="stat-item">
+        <span class="lbl">Last Tr. PT.</span><span id="lastDrawAmount" class="val">0</span>
+      </div>
+      <div class="stat-item btn-area">
+        <button class="adv-draw" onclick="openAdvancedDraw()">Advanced Draw</button>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="series-tag">Series</div>
+      <div class="checkbox-group">
+        <label class="check-orange"><input type="checkbox" id="top-filter-all" onchange="setTopSeriesSelection('all', this.checked)" /> All</label>
+        <label class="check-blue"><input type="checkbox" id="top-filter-even" onchange="setTopSeriesSelection('even', this.checked)" /> Even</label>
+        <label class="check-pink"><input type="checkbox" id="top-filter-odd" onchange="setTopSeriesSelection('odd', this.checked)" /> Odd</label>
+      </div>
+      <div class="marquee-box">
+        <marquee>
+          "GST Number Issued by Government of India. "27AALCS8098XXXX""
+        </marquee>
+      </div>
+    </div>
+
+                                                                                           
+    <div class="series-ranges">
+      <label class="range-box"><input type="checkbox" checked /> 0000-0099</label>
+      <label class="range-box"><input type="checkbox" /> 1000-1099</label>
+      <label class="range-box"><input type="checkbox" /> 2000-2099</label>
+      <label class="range-box"><input type="checkbox" /> 3000-3099</label>
+      <label class="range-box"><input type="checkbox" /> 4000-4099</label>
+      <label class="range-box"><input type="checkbox" /> 5000-5099</label>
+      <label class="range-box"><input type="checkbox" /> 6000-6099</label>
+      <label class="range-box"><input type="checkbox" /> 7000-7099</label>
+      <label class="range-box"><input type="checkbox" /> 8000-8099</label>
+      <label class="range-box"><input type="checkbox" /> 9000-9099</label>
+    </div>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <button class="btn tbtn-green" id="highBtn" onclick="hightlowFun(1)">High</button>
+      <button class="btn tbtn-green" id="lowBtn" onclick="hightlowFun(0)">Low</button>
+      <div class="checkbox-group1">
+        <label><input type="checkbox" id="all-chk-top" onchange="setFP(this, 3)" /> All</label>
+        <label><input type="checkbox" id="even-chk-top" onchange="setFP(this, 2)" /> Even</label>
+        <label><input type="checkbox" id="odd-chk-top" onchange="setFP(this, 1)" /> Odd</label>
+      </div>
+      <div class="right-buttons">
+        <input type="text" id="lp-val" class="btn tbtn-white" placeholder="PT" style="width: 60px; text-align: center; border: 1px solid black;" />
+        <button class="btn tbtn-orange" onclick="luckyPlus()">LP</button>
+        <button class="btn tbtn-orange fp-btn">
+          <input type="checkbox" id="fp-chk" onchange="setFP(this, 0)" style="margin: 0; width: 14px; height: 14px" />
+          FP
+        </button>
+
+        <button class="btn tbtn-orange">Show Result</button>
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="main-layout">
+      <!-- LEFT SIDEBAR -->
+      <div class="sidebar-left">
+        <div class="page-nav-row">
+          <div class="page-btn" id="pageUp" onclick="pageUp()">Page Up</div>
+          <div class="page-btn" id="pageDown" onclick="pageDown()">Page Down</div>
+          <div class="all-check-box">
+            <input type="checkbox" id="all-chk-sidebar" onchange="setSubCatAll(this)" /><span>All</span>
+          </div>
+        </div>
+
+        <div class="range-and-mult">
+          <div class="range-list" id="sidebarRangeList">
+            <div class="range-item ri1" onclick="selectSidebarRange(0)">
+              <div class="range-label">0000-0099</div>
+              <div class="pts-box">
+                <input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)
+              </div>
+            </div>
+            <div class="range-item ri2" onclick="selectSidebarRange(1)">
+              <div class="range-label">0100-0199</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri3" onclick="selectSidebarRange(2)">
+              <div class="range-label">0200-0299</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri4" onclick="selectSidebarRange(3)">
+              <div class="range-label">0300-0399</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri5" onclick="selectSidebarRange(4)">
+              <div class="range-label">0400-0499</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri6" onclick="selectSidebarRange(5)">
+              <div class="range-label">0500-0599</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri7" onclick="selectSidebarRange(6)">
+              <div class="range-label">0600-0699</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri8" onclick="selectSidebarRange(7)">
+              <div class="range-label">0700-0799</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri9" onclick="selectSidebarRange(8)">
+              <div class="range-label">0800-0899</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+            <div class="range-item ri10" onclick="selectSidebarRange(9)">
+              <div class="range-label">0900-0999</div>
+              <div class="pts-box"><input type="checkbox" class="sidebar-chk" onchange="updateTotals()" onclick="event.stopPropagation()" /> (<span class="rs-val">Rs.2</span>)</div>
+            </div>
+          </div>
+
+          <div class="multiplier-list">
+            <div><input type="radio" name="mult" value="2" checked onchange="setPoint(2)" /> 2.00</div>
+            <div><input type="radio" name="mult" value="4" onchange="setPoint(4)" /> 4.00</div>
+            <div><input type="radio" name="mult" value="10" onchange="setPoint(10)" /> 10.00</div>
+            <div><input type="radio" name="mult" value="20" onchange="setPoint(20)" /> 20.00</div>
+            <div><input type="radio" name="mult" value="40" onchange="setPoint(40)" /> 40.00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID AREA -->
+      <div class="grid-area">
+        <table id="gridTable">
+          <thead>
+            <tr>
+              <th class="block-label">All</th>
+              <th><input type="text" class="vertical blue-box" data-id="v1" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v2" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v3" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v4" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v5" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v6" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v7" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v8" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v9" maxlength="3"></th>
+              <th><input type="text" class="vertical blue-box" data-id="v10" maxlength="3"></th>
+              <th>Qty</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody id="gridBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- end .main-layout -->
+
+    <!-- BOTTOM BAR -->
+    <div class="bottom-bar">
+      <button class="bbtn bgreen" onclick="submitBet()">F6 Print</button>
+      <button class="bbtn bred" id="clearBtn" onclick="clearAll()">F7 Clear</button>
+      <input type="text" id="barcodeScan" placeholder="F5 Scan Barcode Here" class="scan-box" maxlength="10" />
+      <span class="msg">MSG</span>
+      <div class="small-box" id="totalQty">0</div>
+      <div class="small-box" id="totalAmt">0</div>
+    </div>
+  </div>
+  <!-- end .scale-viewport -->
+
+  <!-- ================================================
+         ADVANCED DRAW MODAL (Updated Design)
+         ================================================ -->
+  <div class="modal-overlay" id="advDrawModal">
+    <div class="modal-box" style="width:580px; max-width:98vw; border: 2px solid #ccc; border-radius: 4px; padding: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+      <div style="background: white; border-bottom: 1px solid #ddd; padding: 10px; display: flex; justify-content: flex-end;">
+        <button class="modal-close-btn" style="background: white; color: black; border: 1px solid red; border-radius: 4px; width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px;" onclick="closeAdvancedDraw()">✕</button>
+      </div>
+      <div class="modal-body" style="background: white; padding: 20px;">
+        
+        <div style="background-color: #ffff66; text-align: center; padding: 8px; font-weight: bold; color: blue; font-size: 16px; margin-bottom: 20px;">
+          Select Sloat Time
+        </div>
+
+        <div id="slotContainer" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 20px;">
+          <!-- Dynamic Slots from API -->
+        </div>
+
+        <div style="display: flex; gap: 20px; align-items: flex-start; margin-bottom: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 5px;">
+            <label style="display:flex; align-items:center; gap:5px; font-weight:bold; font-size:14px; color:#333;">
+              <input type="checkbox" id="selectAllSloats" onchange="toggleAllSloats(this)"> Select All
+            </label>
+            <span style="font-weight:bold; font-size:14px; color:#333; margin-left: 20px;">Sloat</span>
+          </div>
+          <div style="flex: 1; max-width: 250px;">
+            <input type="text" id="noOfSlot" placeholder="No. of Slot" readonly style="width: 100%; padding: 8px 12px; border: 1px solid #999; border-radius: 2px; font-size: 14px; font-weight: bold; color: #555; background: #fff;" />
+          </div>
+          <div style="font-weight: bold; font-size: 14px; color: #333; padding-top: 8px; cursor: pointer;" onclick="clearAllSloats()">
+            Clear All
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+          <button style="background: white; border: 1px solid #00d2ff; color: black; font-weight: bold; font-size: 14px; padding: 10px 25px; border-radius: 8px; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" onclick="submitAdvancedDraw()">
+            Confirm
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================
+         PRINT RECEIPT TEMPLATE (Hidden by default)
+         ================================================ -->
+  <div id="printReceipt" style="display:none;">
+    <div style="text-align:center; font-family:'Courier New', Courier, monospace; width:72mm; margin:0 auto; padding:5px 12px; background:white; color:black; border:none;">
+      <h2 style="margin:2px 0; font-size:17px; font-weight: 900;">Rajshri Lottery 4D Game</h2>
+      <p style="font-size:11px; margin:0; font-weight: bold;">(Ticket valid for 10 days)</p>
+      <div style="border-top:1px dashed #000; margin:6px 0;"></div>
+      
+      <div style="text-align:left; font-size:12px; line-height:1.5; font-weight:900;">
+        <div>Game Date : <span id="pGameDate"></span></div>
+        <div>Draw Time : <span id="pDrawTime"></span></div>
+        <div>Ticket Time : <span id="pTicketTime"></span></div>
+        <div>Retailer ID : <span id="pRetailerId"></span></div>
+        <div>Total Point : <span id="pTotalPoint"></span></div>
+        <div>Total Qty : <span id="pTotalQty"></span></div>
+      </div>
+
+      <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:13px; border:2px solid #000; font-weight:900;">
+        <thead>
+          <tr>
+            <th style="border:2px solid #000; padding:4px;">Num</th><th style="border:2px solid #000; padding:4px;">Price</th>
+            <th style="border:2px solid #000; padding:4px;">Num</th><th style="border:2px solid #000; padding:4px;">Price</th>
+            <th style="border:2px solid #000; padding:4px;">Num</th><th style="border:2px solid #000; padding:4px;">Price</th>
+          </tr>
+        </thead>
+        <tbody id="pBetTable"></tbody>
+      </table>
+
+      <div style="margin-top:12px; text-align:center;">
+        <svg id="pBarcodeCanvas"></svg>
+      </div>
+      <div style="border-top:1px dashed #000; margin:12px 0;"></div>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    // ── ADVANCED DRAW MODAL ──
+    function openAdvancedDraw() {
+      document.getElementById('advDrawModal').classList.add('open');
+      document.getElementById('advDrawModal').style.display = 'flex'; // Ensure fallback
+      updateSloatCount();
+    }
+    
+    function closeAdvancedDraw() {
+      document.getElementById('advDrawModal').classList.remove('open');
+      document.getElementById('advDrawModal').style.display = 'none'; // Ensure fallback
+    }
+
+    function toggleAllSloats(checkbox) {
+      let checkboxes = document.querySelectorAll('.sloat-checkbox');
+      checkboxes.forEach(cb => cb.checked = checkbox.checked);
+      updateSloatCount();
+    }
+
+    function clearAllSloats() {
+      let checkboxes = document.querySelectorAll('.sloat-checkbox');
+      checkboxes.forEach(cb => cb.checked = false);
+      document.getElementById('selectAllSloats').checked = false;
+      updateSloatCount();
+    }
+
+    function updateSloatCount() {
+      let checkedCount = document.querySelectorAll('.sloat-checkbox:checked').length;
+      document.getElementById('noOfSlot').value = checkedCount > 0 ? checkedCount : '';
+      if (window.updateTotals) window.updateTotals();
+    }
+
+    // Attach event listeners to individual checkboxes to update count
+    document.querySelectorAll('.sloat-checkbox').forEach(cb => {
+      cb.addEventListener('change', function() {
+        updateSloatCount();
+        // Uncheck 'Select All' if one is unchecked
+        if (!this.checked) {
+          document.getElementById('selectAllSloats').checked = false;
+        } else {
+          // Check 'Select All' if all are checked
+          let allChecked = document.querySelectorAll('.sloat-checkbox:checked').length === document.querySelectorAll('.sloat-checkbox').length;
+          document.getElementById('selectAllSloats').checked = allChecked;
+        }
+      });
+    });
+
+    function submitAdvancedDraw() {
+      let selected = [];
+      document.querySelectorAll('.sloat-checkbox:checked').forEach(cb => selected.push(cb.value));
+      
+      if (selected.length === 0) {
+        alert('Please select at least one time slot!');
+        return;
+      }
+      
+      closeAdvancedDraw();
+      alert('Advanced Draw Confirmed for slots: \n' + selected.join(', '));
+    }
+  </script>
+</body>
+
+</html>
